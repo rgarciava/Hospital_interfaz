@@ -1,3 +1,4 @@
+LIBS += -lws2_32
 QT       += core gui widgets sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -12,11 +13,11 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    serverclient.cpp
+    
 
 HEADERS += \
     mainwindow.h \
-    serverclient.h
+    
 
 FORMS += \
     mainwindow.ui

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QSqlQuery>
-#include "serverclient.h"
+
+#include "../../psis-storage-cli/include/connector.hpp"
 #include <QMessageBox>
 #include <QStandardItemModel>
 
@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     // Cambia la IP y puerto según tu servidor
-    serverClient = new ServerClient("127.0.0.1", 65535);
+
     cargarDoctores();
 
     connect(ui->tableView, &QTableView::clicked, this, &MainWindow::on_tableView_clicked);
@@ -25,45 +25,51 @@ MainWindow::~MainWindow()
 void MainWindow::cargarDoctores()
 {
     ui->comboBox->clear();
-    QStringList lines = serverClient->sendQuery("SELECT id, nombre FROM doctores");
-    for (const QString& line : lines) {
-        if (line.startsWith("ERROR")) {
-            QMessageBox::critical(this, "Error", line);
-            return;
-        }
-        QStringList parts = line.split(",");
-        if (parts.size() >= 2) {
-            int id = parts[0].toInt();
-            QString nombre = parts[1];
-            ui->comboBox->addItem(nombre, id);
+    DBConnector db("127.0.0.1", "65535");
+    db.connect();
+
+    // Buscar los primeros 20 doctores (ajusta el rango según tus datos)
+    for (int id = 1; id <= 20; ++id) {
+        auto result = db.get("doctor", id);
+        if (result.success && !result.data.empty()) {
+            const auto& record = result.data[0];
+            int doctorId = std::stoi(record.at("col1"));
+            QString nombre = QString::fromStdString(record.at("col2"));
+            ui->comboBox->addItem(nombre, doctorId);
         }
     }
+
+    db.disconnect();
 }
 
 void MainWindow::on_btnVer_clicked()
 {
     int doctorId = ui->comboBox->currentData().toInt();
     QString query = QString("SELECT id, fecha FROM citas WHERE doctor_id = %1 AND reservada = FALSE").arg(doctorId);
-    QStringList lines = serverClient->sendQuery(query);
+    DBConnector db("127.0.0.1", "65535");
+    db.connect();
+
+    std::string cmd = "SELECT id, fecha FROM citas WHERE doctor_id = " + std::to_string(doctorId) + " AND reservada = FALSE";
+    auto result = db.cmd(cmd);
 
     QStandardItemModel* model = new QStandardItemModel(this);
     model->setHorizontalHeaderLabels({"ID", "Fecha"});
 
-    for (const QString& line : lines) {
-        if (line.startsWith("ERROR")) {
-            QMessageBox::critical(this, "Error", line);
-            return;
-        }
-        QStringList parts = line.split(",");
-        if (parts.size() >= 2) {
-            QList<QStandardItem*> row;
-            row << new QStandardItem(parts[0]);
-            row << new QStandardItem(parts[1]);
-            model->appendRow(row);
-        }
+    if (!result.success) {
+        QMessageBox::critical(this, "Error", QString::fromStdString(result.detail));
+        db.disconnect();
+        return;
+    }
+
+    for (const auto& record : result.data) {
+        QList<QStandardItem*> row;
+        row << new QStandardItem(QString::fromStdString(record.at("id")));
+        row << new QStandardItem(QString::fromStdString(record.at("fecha")));
+        model->appendRow(row);
     }
     ui->tableView->setModel(model);
     ui->tableView->resizeColumnsToContents();
+    db.disconnect();
 }
 
 void MainWindow::on_tableView_clicked(const QModelIndex &index)
@@ -86,18 +92,21 @@ void MainWindow::on_btnReservar_clicked()
         return;
     }
 
-    QSqlQuery query;
-    query.prepare("UPDATE citas SET paciente_nombre = ?, paciente_dni = ?, reservada = TRUE WHERE id = ?");
-    query.addBindValue(nombre);
-    query.addBindValue(dni);
-    query.addBindValue(citaSeleccionadaId);
+    // Usar DBConnector para actualizar la cita
+    DBConnector db("127.0.0.1", "65535");
+    db.connect();
 
-    if (query.exec()) {
+    // Actualizar la cita (puedes adaptar el comando según tu API)
+    std::string cmd = "UPDATE citas SET paciente_nombre = '" + nombre.toStdString() + "', paciente_dni = '" + dni.toStdString() + "', reservada = TRUE WHERE id = " + std::to_string(citaSeleccionadaId);
+    auto result = db.cmd(cmd);
+
+    if (result.success) {
         QMessageBox::information(this, "Éxito", "Cita reservada con éxito.");
         on_btnVer_clicked();  // refrescar tabla
     } else {
-        QMessageBox::critical(this, "Error", "No se pudo reservar la cita.");
+        QMessageBox::critical(this, "Error", QString::fromStdString(result.detail));
     }
 
+    db.disconnect();
     citaSeleccionadaId = -1;
 }
