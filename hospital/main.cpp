@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QSqlDatabase>
 #include <QMessageBox>
+#include <QSqlError>
 
 int main(int argc, char *argv[])
 {
@@ -14,8 +15,10 @@ int main(int argc, char *argv[])
     db.setUserName("root");
     db.setPassword("zapanaromero64");
 
+
     if (!db.open()) {
         QMessageBox::critical(nullptr, "Error", "No se pudo conectar a la base de datos.");
+        qDebug() << "No se pudo conectar a la base de datos:" << db.lastError().text();
         return -1;
     }
 

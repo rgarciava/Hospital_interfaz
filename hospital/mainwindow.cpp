@@ -1,13 +1,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QSqlQuery>
+#include "serverclient.h"
 #include <QMessageBox>
+#include <QStandardItemModel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // Cambia la IP y puerto según tu servidor
+    serverClient = new ServerClient("127.0.0.1", 65535);
     cargarDoctores();
 
     connect(ui->tableView, &QTableView::clicked, this, &MainWindow::on_tableView_clicked);
@@ -20,24 +24,44 @@ MainWindow::~MainWindow()
 
 void MainWindow::cargarDoctores()
 {
-    QSqlQuery query("SELECT id, nombre FROM doctores");
-    while (query.next()) {
-        int id = query.value(0).toInt();
-        QString nombre = query.value(1).toString();
-        ui->comboBox->addItem(nombre, id);
+    ui->comboBox->clear();
+    QStringList lines = serverClient->sendQuery("SELECT id, nombre FROM doctores");
+    for (const QString& line : lines) {
+        if (line.startsWith("ERROR")) {
+            QMessageBox::critical(this, "Error", line);
+            return;
+        }
+        QStringList parts = line.split(",");
+        if (parts.size() >= 2) {
+            int id = parts[0].toInt();
+            QString nombre = parts[1];
+            ui->comboBox->addItem(nombre, id);
+        }
     }
 }
 
 void MainWindow::on_btnVer_clicked()
 {
     int doctorId = ui->comboBox->currentData().toInt();
+    QString query = QString("SELECT id, fecha FROM citas WHERE doctor_id = %1 AND reservada = FALSE").arg(doctorId);
+    QStringList lines = serverClient->sendQuery(query);
 
-    QSqlQueryModel *model = new QSqlQueryModel(this);
-    model->setQuery(QString("SELECT id, fecha FROM citas WHERE doctor_id = %1 AND reservada = FALSE").arg(doctorId));
+    QStandardItemModel* model = new QStandardItemModel(this);
+    model->setHorizontalHeaderLabels({"ID", "Fecha"});
 
-    model->setHeaderData(0, Qt::Horizontal, "ID");
-    model->setHeaderData(1, Qt::Horizontal, "Fecha");
-
+    for (const QString& line : lines) {
+        if (line.startsWith("ERROR")) {
+            QMessageBox::critical(this, "Error", line);
+            return;
+        }
+        QStringList parts = line.split(",");
+        if (parts.size() >= 2) {
+            QList<QStandardItem*> row;
+            row << new QStandardItem(parts[0]);
+            row << new QStandardItem(parts[1]);
+            model->appendRow(row);
+        }
+    }
     ui->tableView->setModel(model);
     ui->tableView->resizeColumnsToContents();
 }

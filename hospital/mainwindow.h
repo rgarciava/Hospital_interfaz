@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QSqlQueryModel>
 #include <QSqlDatabase>
+#include "serverclient.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,6 +27,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     int citaSeleccionadaId = -1;
+    ServerClient* serverClient = nullptr;
 
     void cargarDoctores();
 };
