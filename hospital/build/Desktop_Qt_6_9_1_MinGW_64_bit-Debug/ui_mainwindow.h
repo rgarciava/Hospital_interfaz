@@ -13,12 +13,14 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateEdit>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTableView>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -27,15 +29,20 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
+    QLabel *lblDoctor;
     QComboBox *comboBox;
+    QLabel *lblFecha;
     QDateEdit *dateEdit;
+    QLabel *lblHora;
     QComboBox *comboHora;
-    QPushButton *btnReservar;
-    QLabel *label_2;
-    QLineEdit *txtDNI;
+    QLabel *lblPaciente;
     QLineEdit *txtPaciente;
-    QLabel *label_3;
-    QLabel *label;
+    QLabel *lblDNI;
+    QLineEdit *txtDNI;
+    QPushButton *btnReservar;
+    QTableView *tableView;
+    QPushButton *btnListarCitas;
+    QPushButton *btnEliminarCita;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -43,47 +50,56 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(465, 487);
-        MainWindow->setStyleSheet(QString::fromUtf8("QWidget {\n"
-"    background-color: #f4f4f4;\n"
-"}\n"
-""));
+        MainWindow->resize(600, 600);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
+        lblDoctor = new QLabel(centralwidget);
+        lblDoctor->setObjectName("lblDoctor");
+        lblDoctor->setGeometry(QRect(20, 20, 150, 20));
         comboBox = new QComboBox(centralwidget);
-        comboBox->addItem(QString());
         comboBox->setObjectName("comboBox");
-        comboBox->setGeometry(QRect(50, 30, 141, 22));
+        comboBox->setGeometry(QRect(180, 20, 200, 25));
+        lblFecha = new QLabel(centralwidget);
+        lblFecha->setObjectName("lblFecha");
+        lblFecha->setGeometry(QRect(20, 60, 150, 20));
         dateEdit = new QDateEdit(centralwidget);
         dateEdit->setObjectName("dateEdit");
-        dateEdit->setGeometry(QRect(220, 70, 110, 22));
+        dateEdit->setGeometry(QRect(180, 60, 200, 25));
         dateEdit->setCalendarPopup(true);
+        lblHora = new QLabel(centralwidget);
+        lblHora->setObjectName("lblHora");
+        lblHora->setGeometry(QRect(20, 100, 150, 20));
         comboHora = new QComboBox(centralwidget);
         comboHora->setObjectName("comboHora");
-        comboHora->setGeometry(QRect(220, 110, 110, 22));
-        btnReservar = new QPushButton(centralwidget);
-        btnReservar->setObjectName("btnReservar");
-        btnReservar->setGeometry(QRect(190, 400, 75, 24));
-        label_2 = new QLabel(centralwidget);
-        label_2->setObjectName("label_2");
-        label_2->setGeometry(QRect(50, 10, 61, 16));
-        label_2->setStyleSheet(QString::fromUtf8("font: 700 12pt \"Arial Rounded MT\";"));
-        txtDNI = new QLineEdit(centralwidget);
-        txtDNI->setObjectName("txtDNI");
-        txtDNI->setGeometry(QRect(190, 340, 91, 22));
+        comboHora->setGeometry(QRect(180, 100, 200, 25));
+        lblPaciente = new QLabel(centralwidget);
+        lblPaciente->setObjectName("lblPaciente");
+        lblPaciente->setGeometry(QRect(20, 140, 150, 20));
         txtPaciente = new QLineEdit(centralwidget);
         txtPaciente->setObjectName("txtPaciente");
-        txtPaciente->setGeometry(QRect(190, 310, 231, 22));
-        label_3 = new QLabel(centralwidget);
-        label_3->setObjectName("label_3");
-        label_3->setGeometry(QRect(60, 340, 101, 16));
-        label = new QLabel(centralwidget);
-        label->setObjectName("label");
-        label->setGeometry(QRect(60, 310, 111, 16));
+        txtPaciente->setGeometry(QRect(180, 140, 200, 25));
+        lblDNI = new QLabel(centralwidget);
+        lblDNI->setObjectName("lblDNI");
+        lblDNI->setGeometry(QRect(20, 180, 150, 20));
+        txtDNI = new QLineEdit(centralwidget);
+        txtDNI->setObjectName("txtDNI");
+        txtDNI->setGeometry(QRect(180, 180, 200, 25));
+        btnReservar = new QPushButton(centralwidget);
+        btnReservar->setObjectName("btnReservar");
+        btnReservar->setGeometry(QRect(180, 220, 150, 30));
+        tableView = new QTableView(centralwidget);
+        tableView->setObjectName("tableView");
+        tableView->setGeometry(QRect(20, 270, 550, 200));
+        btnListarCitas = new QPushButton(centralwidget);
+        btnListarCitas->setObjectName("btnListarCitas");
+        btnListarCitas->setGeometry(QRect(20, 480, 150, 30));
+        btnEliminarCita = new QPushButton(centralwidget);
+        btnEliminarCita->setObjectName("btnEliminarCita");
+        btnEliminarCita->setGeometry(QRect(200, 480, 150, 30));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 465, 22));
+        menubar->setGeometry(QRect(0, 0, 600, 21));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
@@ -96,13 +112,15 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        comboBox->setItemText(0, QCoreApplication::translate("MainWindow", "--Seleccione Doctor--", nullptr));
-
-        btnReservar->setText(QCoreApplication::translate("MainWindow", "Reservar cita", nullptr));
-        label_2->setText(QCoreApplication::translate("MainWindow", "Doctor", nullptr));
-        label_3->setText(QCoreApplication::translate("MainWindow", "DNI del paciente:", nullptr));
-        label->setText(QCoreApplication::translate("MainWindow", "Nombre de paciente:", nullptr));
+        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Gestor de Citas M\303\251dicas", nullptr));
+        lblDoctor->setText(QCoreApplication::translate("MainWindow", "Seleccionar Doctor:", nullptr));
+        lblFecha->setText(QCoreApplication::translate("MainWindow", "Seleccionar Fecha:", nullptr));
+        lblHora->setText(QCoreApplication::translate("MainWindow", "Seleccionar Hora:", nullptr));
+        lblPaciente->setText(QCoreApplication::translate("MainWindow", "Nombre del Paciente:", nullptr));
+        lblDNI->setText(QCoreApplication::translate("MainWindow", "DNI del Paciente:", nullptr));
+        btnReservar->setText(QCoreApplication::translate("MainWindow", "Reservar Cita", nullptr));
+        btnListarCitas->setText(QCoreApplication::translate("MainWindow", "Listar Citas", nullptr));
+        btnEliminarCita->setText(QCoreApplication::translate("MainWindow", "Eliminar Cita Seleccionada", nullptr));
     } // retranslateUi
 
 };
