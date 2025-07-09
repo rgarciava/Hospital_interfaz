@@ -1,9 +1,9 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
 #pragma once
+
 #include <QMainWindow>
-#include <QListWidgetItem>
+#include <QMap>
+#include <QDate>
+#include <QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,10 +17,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
 private slots:
-    void on_btnVer_clicked();
     void on_btnReservar_clicked();
+    void on_btnListarCitas_clicked();
+    void on_btnEliminarCita_clicked();
     void on_comboBox_currentIndexChanged(int index);
     void on_dateEdit_dateChanged(const QDate &date);
     void on_comboHora_currentIndexChanged(int index);
@@ -28,10 +28,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
     int citaSeleccionadaId = -1;
-    QMap<QString, int> horaToCitaId; // Mapea hora (texto) a id de cita
+    QMap<QString, int> horaToCitaId; // Hora -> id de cita
+    QStandardItemModel *modeloCitas;
 
     void cargarDoctores();
     void cargarHorasDisponibles();
+    void cargarCitas(); // NUEVO
 };
-
-#endif // MAINWINDOW_H
