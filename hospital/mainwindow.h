@@ -23,15 +23,11 @@ private slots:
     void on_btnEliminarCita_clicked();
     void on_comboBox_currentIndexChanged(int index);
     void on_dateEdit_dateChanged(const QDate &date);
-    void on_comboHora_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;
-    int citaSeleccionadaId = -1;
-    QMap<QString, int> horaToCitaId; // Hora -> id de cita
     QStandardItemModel *modeloCitas;
 
     void cargarDoctores();
-    void cargarHorasDisponibles();
-    void cargarCitas(); // NUEVO
+    void cargarHoras();
 };
