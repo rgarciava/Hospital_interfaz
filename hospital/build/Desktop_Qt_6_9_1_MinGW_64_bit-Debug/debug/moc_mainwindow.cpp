@@ -42,9 +42,11 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         "on_btnVer_clicked",
         "",
         "on_btnReservar_clicked",
-        "on_tableView_clicked",
-        "QModelIndex",
-        "index"
+        "on_comboBox_currentIndexChanged",
+        "index",
+        "on_dateEdit_dateChanged",
+        "date",
+        "on_comboHora_currentIndexChanged"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -52,9 +54,17 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'on_btnReservar_clicked'
         QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'on_tableView_clicked'
-        QtMocHelpers::SlotData<void(const QModelIndex &)>(4, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { 0x80000000 | 5, 6 },
+        // Slot 'on_comboBox_currentIndexChanged'
+        QtMocHelpers::SlotData<void(int)>(4, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Int, 5 },
+        }}),
+        // Slot 'on_dateEdit_dateChanged'
+        QtMocHelpers::SlotData<void(const QDate &)>(6, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::QDate, 7 },
+        }}),
+        // Slot 'on_comboHora_currentIndexChanged'
+        QtMocHelpers::SlotData<void(int)>(8, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Int, 5 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -81,7 +91,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         switch (_id) {
         case 0: _t->on_btnVer_clicked(); break;
         case 1: _t->on_btnReservar_clicked(); break;
-        case 2: _t->on_tableView_clicked((*reinterpret_cast< std::add_pointer_t<QModelIndex>>(_a[1]))); break;
+        case 2: _t->on_comboBox_currentIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 3: _t->on_dateEdit_dateChanged((*reinterpret_cast< std::add_pointer_t<QDate>>(_a[1]))); break;
+        case 4: _t->on_comboHora_currentIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         default: ;
         }
     }
@@ -106,14 +118,14 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 5;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 5)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 3;
+        _id -= 5;
     }
     return _id;
 }

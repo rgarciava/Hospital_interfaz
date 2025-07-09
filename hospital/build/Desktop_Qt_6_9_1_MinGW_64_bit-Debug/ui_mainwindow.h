@@ -12,14 +12,13 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QDateEdit>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTableView>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -29,10 +28,10 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QComboBox *comboBox;
-    QPushButton *btnVer;
+    QDateEdit *dateEdit;
+    QComboBox *comboHora;
     QPushButton *btnReservar;
     QLabel *label_2;
-    QTableView *tableView;
     QLineEdit *txtDNI;
     QLineEdit *txtPaciente;
     QLabel *label_3;
@@ -46,10 +45,6 @@ public:
             MainWindow->setObjectName("MainWindow");
         MainWindow->resize(465, 487);
         MainWindow->setStyleSheet(QString::fromUtf8("QWidget {\n"
-"    background-image: url(:/imagenes/walla.jpg);  /* Si la imagen est\303\241 en recursos */\n"
-"    background-repeat: no-repeat;\n"
-"    background-position: center;\n"
-"    background-attachment: fixed;\n"
 "    background-color: #f4f4f4;\n"
 "}\n"
 ""));
@@ -59,24 +54,13 @@ public:
         comboBox->addItem(QString());
         comboBox->setObjectName("comboBox");
         comboBox->setGeometry(QRect(50, 30, 141, 22));
-        btnVer = new QPushButton(centralwidget);
-        btnVer->setObjectName("btnVer");
-        btnVer->setGeometry(QRect(180, 70, 111, 31));
-        btnVer->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: #3498db;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 8px;\n"
-"    font-weight: bold;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #2980b9;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #1c5980;\n"
-"}\n"
-""));
+        dateEdit = new QDateEdit(centralwidget);
+        dateEdit->setObjectName("dateEdit");
+        dateEdit->setGeometry(QRect(220, 70, 110, 22));
+        dateEdit->setCalendarPopup(true);
+        comboHora = new QComboBox(centralwidget);
+        comboHora->setObjectName("comboHora");
+        comboHora->setGeometry(QRect(220, 110, 110, 22));
         btnReservar = new QPushButton(centralwidget);
         btnReservar->setObjectName("btnReservar");
         btnReservar->setGeometry(QRect(190, 400, 75, 24));
@@ -84,9 +68,6 @@ public:
         label_2->setObjectName("label_2");
         label_2->setGeometry(QRect(50, 10, 61, 16));
         label_2->setStyleSheet(QString::fromUtf8("font: 700 12pt \"Arial Rounded MT\";"));
-        tableView = new QTableView(centralwidget);
-        tableView->setObjectName("tableView");
-        tableView->setGeometry(QRect(60, 110, 361, 191));
         txtDNI = new QLineEdit(centralwidget);
         txtDNI->setObjectName("txtDNI");
         txtDNI->setGeometry(QRect(190, 340, 91, 22));
@@ -118,7 +99,6 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         comboBox->setItemText(0, QCoreApplication::translate("MainWindow", "--Seleccione Doctor--", nullptr));
 
-        btnVer->setText(QCoreApplication::translate("MainWindow", "Ver horarios", nullptr));
         btnReservar->setText(QCoreApplication::translate("MainWindow", "Reservar cita", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Doctor", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "DNI del paciente:", nullptr));

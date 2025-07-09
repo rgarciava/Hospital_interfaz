@@ -15,10 +15,6 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
-    background-image: url(:/imagenes/walla.jpg);  /* Si la imagen está en recursos */
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
     background-color: #f4f4f4;
 }
 </string>
@@ -39,34 +35,29 @@
      </property>
     </item>
    </widget>
-   <widget class="QPushButton" name="btnVer">
+   <!-- QDateEdit para seleccionar la fecha -->
+   <widget class="QDateEdit" name="dateEdit">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>220</x>
       <y>70</y>
-      <width>111</width>
-      <height>31</height>
+      <width>110</width>
+      <height>22</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: bold;
-}
-QPushButton:hover {
-    background-color: #2980b9;
-}
-QPushButton:pressed {
-    background-color: #1c5980;
-}
-</string>
+    <property name="calendarPopup">
+     <bool>true</bool>
     </property>
-    <property name="text">
-     <string>Ver horarios</string>
+   </widget>
+   <!-- Widget para seleccionar la hora disponible -->
+   <widget class="QComboBox" name="comboHora">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>110</y>
+      <width>110</width>
+      <height>22</height>
+     </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="btnReservar">
@@ -98,16 +89,7 @@ QPushButton:pressed {
      <string>Doctor</string>
     </property>
    </widget>
-   <widget class="QTableView" name="tableView">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>110</y>
-      <width>361</width>
-      <height>191</height>
-     </rect>
-    </property>
-   </widget>
+   <!-- Eliminado QTableView tableView -->
    <widget class="QLineEdit" name="txtDNI">
     <property name="geometry">
      <rect>
